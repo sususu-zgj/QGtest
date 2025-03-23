@@ -131,7 +131,7 @@ public class CourseListPage extends Page {
             input = userInput();
             if(input.isBack()) return;
             if(input.isNumber() && input.number() > 0 && input.number() <= courses.size()) {
-                Course course = courses.get(input.number());
+                Course course = courses.get(input.number() - 1);
                 int nowNum = course.getNowNumber();
 
                 if(course.isOpen()) {
