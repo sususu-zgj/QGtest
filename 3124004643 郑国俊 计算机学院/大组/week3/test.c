@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include<string.h>
 #include<time.h>
 #include "sort.c"
 
@@ -47,11 +48,11 @@ void test(int *arr, int n) {
 	int i;
 	
 	for(i = 0; i < 5; i++) {
-		arrArr[i] = (int*)malloc(n * sizeof(int));
+		arrArr[i] = (int*)malloc(n * sizeof(int));		// 分配内存 
 	}
 	tempArr = (int*)malloc(n * sizeof(int));
 	
-	for(i = 0; i < n; i++) {
+	for(i = 0; i < n; i++) {		// 复制数组 
 		arrArr[0][i] = arr[i];
 		arrArr[1][i] = arr[i];
 		arrArr[2][i] = arr[i];
@@ -63,46 +64,46 @@ void test(int *arr, int n) {
 	startTime = clock();
 	insertSort(arrArr[0], n);
 	costTime = clock() - startTime;
-	printf("花费时间：%d ms\n", costTime);
+	printf("花费时间：%d ms\n\n", costTime);
 	
 	printf("正在测试归并排序\n");
 	startTime = clock();
 	mergeSort(arrArr[1], tempArr, 0, n-1);	
 	costTime = clock() - startTime;
-	printf("花费时间：%d ms\n", costTime);
+	printf("花费时间：%d ms\n\n", costTime);
 	
 	printf("正在测试快速排序\n");
 	startTime = clock();
 	quickSort(arrArr[2], 0, n-1);	
 	costTime = clock() - startTime;
-	printf("花费时间：%d ms\n", costTime);
+	printf("花费时间：%d ms\n\n", costTime);
 	
 	printf("正在测试计数排序\n");
 	startTime = clock();
 	countSort(arrArr[3], n);	
 	costTime = clock() - startTime;
-	printf("花费时间：%d ms\n", costTime);
+	printf("花费时间：%d ms\n\n", costTime);
 	
 	printf("正在测试基数排序\n");
 	startTime = clock();
 	radixCountSort(arrArr[4], n);
 	costTime = clock() - startTime;
-	printf("花费时间：%d ms\n", costTime);
+	printf("花费时间：%d ms\n\n", costTime);
 	
-	writeTo("insertSort.txt", arrArr[0], n);
+	writeTo("insertSort.txt", arrArr[0], n);		// 写入文件 
 	writeTo("mergeSort.txt", arrArr[1], n);
 	writeTo("quickSort.txt", arrArr[2], n);
 	writeTo("countSort.txt", arrArr[3], n);
 	writeTo("radixCountSort.txt", arrArr[4], n);
 	
-	for(i = 0; i < 5; i++) {
+	for(i = 0; i < 5; i++) {	// 释放内存 
 		free(arrArr[i]);
 	}
 	free(tempArr);
 }	
 
 // 测试二 
-void test2() {
+void test2() {	
 	int selected=0, max=0, min=0, length=0, counts=0;
 	clock_t startTime, costTime;
 	int i;
@@ -118,7 +119,7 @@ void test2() {
 			return;
 		}
 		
-		printf("请输入要测试的次数\n");
+		printf("请输入要测试的次数\n");		// 填写各项测试的配置 
 		while(!scanf("%d", &counts)) {
 			printf("请输入一个数字");
 			cleanInput();
@@ -168,7 +169,7 @@ void test2() {
 		}
 		free(tempArr);
 		
-		printf("本次用时%d ms\n共测试组数据%d\n每组数据量为%d\n最大数据不超过%d\n最小数据不小于%d\n", costTime, counts, length, max, min);
+		printf("本次用时%d ms\n共测试组数据%d\n每组数据量为%d\n最大数据不超过%d\n最小数据不小于%d\n\n", costTime, counts, length, max, min);
 	}
 }
 
@@ -177,51 +178,56 @@ int main() {
 	char input, filename[256];
 	FILE *fp;
 	
-	printf("------头发很多算法测试器------\n");
-	printf("欢迎使用头发很多排序算法测试器\n");
-	printf("请选择测试模式：\n1-单文件测试（将导出排序结果）\n2-随机生成数据测试\n");
-	while(!scanf("%d", &numInput) || numInput < 1 || numInput > 2) {
-		printf("请输入以上选项\n");
-		cleanInput();
-	}
-	cleanInput();
-	
 	while(1) {
-		if(numInput == 1) {
+		printf("------头发很多算法测试器------\n");
+		printf("欢迎使用头发很多排序算法测试器\n");
+		printf("请选择测试模式：\n1-单文件测试（将导出排序结果）\n2-随机生成数据测试\n3-退出\n");
+		while(!scanf("%d", &numInput) || numInput < 1 || numInput > 3) {		// 选择操作 
+			printf("请输入以上选项\n");
+			cleanInput();
+		}
+		cleanInput();
+		
+		if(numInput == 1) {		// 选择一 
+			int back = 1;
 			while(1) {
-				printf("请输入要测试的文件（包含后缀名）\n");
+				printf("请输入要测试的文件（包含后缀名），如果要返回请输入“back”\n");
 				gets(filename);
-				fp = fopen(filename, "r");
-			
+				
+				back =strcmp(filename, "back");	// 判断是否返回 
+				if(back == 0) {
+					break;
+				}
+				
+				fp = fopen(filename, "r");	// 读取文件 
 				if(fp == NULL) {
 					printf("文件不存在，请重新输入\n");
 					continue;
 				}
 				break;
 			}
+			if(back == 0) continue;
+			
 			printf("文件“%s”读取中\n", filename);
 			
-			int amount = 0;
+			int amount = 0;	// 数据量 
 			fscanf(fp, "%d\n", &amount);
 			
-			int *arr = (int*)malloc(amount * sizeof(int));
+			int *arr = (int*)malloc(amount * sizeof(int));	// 读取到数组 
 			for(i = 0; i < amount; i++) {
 				fscanf(fp, "%d ", &arr[i]);
 			}
 			fclose(fp);
 			
 			printf("文件读取完毕，共读取%d个数字\n", amount);
-			test(arr, amount);
+			test(arr, amount);	// 测试 
 		}
-		else {
+		else if(numInput == 2){
 			test2();	
 		}
+		else {
+			return 0;
+		}
 		
-		printf("是否要退出？（Y/N）");
-		char input = getchar();
-		cleanInput();
-			
-		if(input == 'Y' || input == 'y') return 1;
-		else if(input == 'N' || input == 'n') continue;
 	}
 }
